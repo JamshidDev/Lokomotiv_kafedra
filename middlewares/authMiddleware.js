@@ -11,14 +11,14 @@ module.exports = async function auth(req, res, next) {
             res.status(401).json({
                 isSuccess: false,
                 data: null,
-                errorMessage: "Token yaroqsiz"
+                errorMessage: "Token is empty"
             })
         }
     } else {
         res.status(401).json({
             isSuccess: false,
             data: null,
-            errorMessage: "Ro'yhatdan o'tmagansiz"
+            errorMessage: "Admin is unauthorization"
         })
     }
 }

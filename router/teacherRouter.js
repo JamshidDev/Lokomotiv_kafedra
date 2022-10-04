@@ -1,9 +1,11 @@
 const express = require("express")
 const router = express.Router()
+const langList = require("../utils/langList")
 
-const TEACHER = require("../models/teacherModels")
+const { TeacherUZ, TeacherRU, TeacherEN } = require("../models/teacherModels")
 const fs = require("fs")
 const multer = require("multer")
+const e = require("express")
 
 const fileStorageEngine = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -22,19 +24,55 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post("/add", upload.single('picture'), async (req, res) => {
     try {
-        let picture = req.file.filename
-        let {firstName,lastName,midName,position,phone,email,visit_time,subjects} = req.body
-        let teacher = await TEACHER.create({
-            firstName,
-            lastName,
-            midName,
-            position,
-            phone,
-            picture,
-            email,
-            visit_time,
-            subjects,
-        })
+        let picture = req.file.filename;
+        let creatorId = req.user_id;
+        let lang_code = req.lang_code;
+        let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body
+        let teacher = null;
+
+        if (lang_code == langList[0].code) {
+            teacher = await TeacherUZ.create({
+                firstName,
+                lastName,
+                midName,
+                position,
+                phone,
+                picture,
+                email,
+                visit_time,
+                subjects,
+                creatorId,
+            })
+        } else if (lang_code == langList[1].code) {
+            teacher = await TeacherRU.create({
+                firstName,
+                lastName,
+                midName,
+                position,
+                phone,
+                picture,
+                email,
+                visit_time,
+                subjects,
+                creatorId,
+            })
+        } else if (lang_code == langList[2].code) {
+            teacher = await TeacherEN.create({
+                firstName,
+                lastName,
+                midName,
+                position,
+                phone,
+                picture,
+                email,
+                visit_time,
+                subjects,
+                creatorId,
+            })
+        }
+
+
+
         res.status(200).json({
             isSuccess: true,
             data: teacher,
@@ -51,39 +89,68 @@ router.post("/add", upload.single('picture'), async (req, res) => {
 })
 
 //  edit teacher details
-router.put("/update", upload.single('picture'), async(req,res)=>{
-    try{
+router.put("/update", upload.single('picture'), async (req, res) => {
+    try {
         let picture = req.file?.filename
         let teacher_id = req.query.teacher_id
-        let {firstName,lastName,midName,position,phone,email,visit_time,subjects} = req.body;
-        let oldTeacher = await TEACHER.findOne({ _id: teacher_id })
+        let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body;
+        let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
         const path = `./public/teacher/${oldTeacher.picture}`;
-       if(picture){
-        fs.unlinkSync(path, (error) => {
-            if (error) {
-              console.log(`Delete news picture error ---> ${error}`);
-              return
-            }
-          })
-       }
-        let teacher = await TEACHER.findByIdAndUpdate(teacher_id, {
-            firstName,
-            lastName,
-            midName,
-            position,
-            phone,
-            email,
-            visit_time,
-            subjects,
-            picture,
-          });
-          res.status(200).json({
+        if (picture) {
+            fs.unlinkSync(path, (error) => {
+                if (error) {
+                    console.log(`Delete news picture error ---> ${error}`);
+                    return
+                }
+            })
+        }
+
+        let teacher = null;
+        if (lang_code == langList[0].code) {
+            teacher = await TeacherUZ.findByIdAndUpdate(teacher_id, {
+                firstName: firstName || undefined,
+                lastName: lastName || undefined,
+                midName: midName || undefined,
+                position: position || undefined,
+                phone: phone || undefined,
+                email: email || undefined,
+                visit_time: visit_time || undefined,
+                subjects: subjects || undefined,
+                picture: picture || undefined,
+            });
+        } else if (lang_code == langList[1].code) {
+            teacher = await TeacherRU.findByIdAndUpdate(teacher_id, {
+                firstName: firstName || undefined,
+                lastName: lastName || undefined,
+                midName: midName || undefined,
+                position: position || undefined,
+                phone: phone || undefined,
+                email: email || undefined,
+                visit_time: visit_time || undefined,
+                subjects: subjects || undefined,
+                picture: picture || undefined,
+            });
+        } else if (lang_code == langList[2].code) {
+            teacher = await TeacherEN.findByIdAndUpdate(teacher_id, {
+                firstName: firstName || undefined,
+                lastName: lastName || undefined,
+                midName: midName || undefined,
+                position: position || undefined,
+                phone: phone || undefined,
+                email: email || undefined,
+                visit_time: visit_time || undefined,
+                subjects: subjects || undefined,
+                picture: picture || undefined,
+            });
+        }
+
+        res.status(200).json({
             isSuccess: true,
             data: teacher,
             errorMessage: null,
         })
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             isSuccess: false,
@@ -91,17 +158,30 @@ router.put("/update", upload.single('picture'), async(req,res)=>{
             errorMessage: error,
         })
     }
-} )
+})
 
 // Teacher pagination
-router.get("/all", async(req, res)=>{
-    try{
+router.get("/all", async (req, res) => {
+    try {
+        let lang_code = req.lang_code;
         let page = req.query.page || 1;
         let per_page = req.query.per_page || 10;
-        console.log(req.query);
-        let totalPage = await TEACHER.countDocuments({})
+        let search = req.query.search || "";
 
-        let teacher = await TEACHER.find({}).skip((page-1)*per_page).limit(per_page);
+        let teacher = null;
+        let totalPage = null;
+
+        if (lang_code == langList[0].code) {
+            totalPage = await TeacherUZ.countDocuments({ firstName: { $regex: search } })
+            teacher = await TeacherUZ.find({ firstName: { $regex: search } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+        } else if (lang_code == langList[1].code) {
+            totalPage = await TeacherRU.countDocuments({ firstName: { $regex: search } })
+            teacher = await TeacherRU.find({ firstName: { $regex: search } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+        } else if (lang_code == langList[2].code) {
+            totalPage = await TeacherEN.countDocuments({ firstName: { $regex: search } })
+            teacher = await TeacherEN.find({ firstName: { $regex: search } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+        }
+
         res.status(200).json({
             isSuccess: true,
             data: teacher,
@@ -109,7 +189,7 @@ router.get("/all", async(req, res)=>{
             errorMessage: null,
         })
 
-     }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             isSuccess: false,
@@ -120,26 +200,26 @@ router.get("/all", async(req, res)=>{
 })
 
 // Get teacher by id
-router.get("/one", async(req,res)=>{
-    try{
+router.get("/one", async (req, res) => {
+    try {
+        let lang_code = req.lang_code;
         let teacher_id = req.query.teacher_id;
-        let totalPage = await TEACHER.countDocuments({})
-        let existTeacher = await TEACHER.find({_id:teacher_id})
-        if(existTeacher.length>0){
-            res.status(200).json({
-                isSuccess: true,
-                data: existTeacher,
-                totalPage,
-                errorMessage: null,
-            })
-        }else{
-            res.status(400).json({
-                isSuccess: false,
-                data: null,
-                errorMessage: "Teacher topilmadi",
-            })
+        let existTeacher = [];
+
+        if(lang_code == langList[0].code){
+            existTeacher = await TeacherUZ.find({ _id: teacher_id })
+        }else if (lang_code == langList[1].code){
+            existTeacher = await TeacherRU.find({ _id: teacher_id })
+        }else if(lang_code == langList[2].code){
+            existTeacher = await TeacherEN.find({ _id: teacher_id })
         }
-    }catch(error){
+        let isHaveTEacher = existTeacher.length > 0 
+        res.status(isHaveTEacher? 200 : 400).json({
+            isSuccess: isHaveTEacher,
+            data: isHaveTEacher? existTeacher: null,
+            errorMessage: isHaveTEacher? null : "Teacher not found",
+        })
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             isSuccess: false,
@@ -149,17 +229,26 @@ router.get("/one", async(req,res)=>{
     }
 })
 
-router.delete("/delete", async(req, res) => {
-    try{
+router.delete("/delete", async (req, res) => {
+    try {
         let teacher_id = req.query.teacher_id;
-        let teacher = await TEACHER.deleteOne({_id: teacher_id})
+        let lang_code = req.lang_code;
+        let teacher = null;
+
+        if(lang_code == langList[0].code){
+            teacher = await TeacherUZ.deleteOne({ _id: teacher_id })
+        }else if (lang_code == langList[1].code) {
+            teacher = await TeacherRU.deleteOne({ _id: teacher_id })
+        }else if (lang_code == langList[1].code) {
+            teacher = await TeacherEN.deleteOne({ _id: teacher_id })
+        }
         res.status(200).json({
             isSuccess: true,
             data: teacher,
             errorMessage: null,
         })
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             isSuccess: false,
