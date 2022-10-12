@@ -24,7 +24,8 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post("/add", upload.single('picture'), async (req, res) => {
     try {
-        let picture = req.file.filename;
+        console.log(req.file);
+        let picture = req.file?.filename
         let creatorId = req.user_id;
         let lang_code = req.lang_code;
         let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body
@@ -93,20 +94,19 @@ router.put("/update", upload.single('picture'), async (req, res) => {
     try {
         let picture = req.file?.filename
         let teacher_id = req.query.teacher_id
+        let lang_code = req.lang_code;
         let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body;
-        let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
-        const path = `./public/teacher/${oldTeacher.picture}`;
-        if (picture) {
-            fs.unlinkSync(path, (error) => {
-                if (error) {
-                    console.log(`Delete news picture error ---> ${error}`);
-                    return
-                }
-            })
-        }
-
+        
         let teacher = null;
         if (lang_code == langList[0].code) {
+            let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
+
             teacher = await TeacherUZ.findByIdAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
@@ -119,6 +119,15 @@ router.put("/update", upload.single('picture'), async (req, res) => {
                 picture: picture || undefined,
             });
         } else if (lang_code == langList[1].code) {
+
+            let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
+
             teacher = await TeacherRU.findByIdAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
@@ -131,6 +140,15 @@ router.put("/update", upload.single('picture'), async (req, res) => {
                 picture: picture || undefined,
             });
         } else if (lang_code == langList[2].code) {
+
+            let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
+
             teacher = await TeacherEN.findByIdAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
@@ -206,18 +224,18 @@ router.get("/one", async (req, res) => {
         let teacher_id = req.query.teacher_id;
         let existTeacher = [];
 
-        if(lang_code == langList[0].code){
+        if (lang_code == langList[0].code) {
             existTeacher = await TeacherUZ.find({ _id: teacher_id })
-        }else if (lang_code == langList[1].code){
+        } else if (lang_code == langList[1].code) {
             existTeacher = await TeacherRU.find({ _id: teacher_id })
-        }else if(lang_code == langList[2].code){
+        } else if (lang_code == langList[2].code) {
             existTeacher = await TeacherEN.find({ _id: teacher_id })
         }
-        let isHaveTEacher = existTeacher.length > 0 
-        res.status(isHaveTEacher? 200 : 400).json({
+        let isHaveTEacher = existTeacher.length > 0
+        res.status(isHaveTEacher ? 200 : 400).json({
             isSuccess: isHaveTEacher,
-            data: isHaveTEacher? existTeacher: null,
-            errorMessage: isHaveTEacher? null : "Teacher not found",
+            data: isHaveTEacher ? existTeacher : null,
+            errorMessage: isHaveTEacher ? null : "Teacher not found",
         })
     } catch (error) {
         console.log(error);
@@ -235,11 +253,32 @@ router.delete("/delete", async (req, res) => {
         let lang_code = req.lang_code;
         let teacher = null;
 
-        if(lang_code == langList[0].code){
+        if (lang_code == langList[0].code) {
+            let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
             teacher = await TeacherUZ.deleteOne({ _id: teacher_id })
-        }else if (lang_code == langList[1].code) {
+        } else if (lang_code == langList[1].code) {
+            let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
             teacher = await TeacherRU.deleteOne({ _id: teacher_id })
-        }else if (lang_code == langList[1].code) {
+        } else if (lang_code == langList[1].code) {
+            let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.existsSync(path, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(path);
+                }
+            });
             teacher = await TeacherEN.deleteOne({ _id: teacher_id })
         }
         res.status(200).json({
