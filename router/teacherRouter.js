@@ -24,11 +24,12 @@ const upload = multer({ storage: fileStorageEngine })
 
 router.post("/add", upload.single('picture'), async (req, res) => {
     try {
-        console.log(req.file);
         let picture = req.file?.filename
         let creatorId = req.user_id;
         let lang_code = req.lang_code;
         let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body
+        console.log(subjects);
+        console.log(JSON.parse(subjects));
         let teacher = null;
 
         if (lang_code == langList[0].code) {
