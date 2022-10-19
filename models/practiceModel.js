@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const LectureSchemaUZ = mongoose.Schema({
+const PracticeSchemaUZ = mongoose.Schema({
     title:{
         type:String,
         required:true,
@@ -15,10 +15,9 @@ const LectureSchemaUZ = mongoose.Schema({
     creatorId:{
         type:mongoose.Schema.Types.ObjectId, ref:"Admin",
     }
-    
 })
 
-const LectureSchemaRU = mongoose.Schema({
+const PracticeSchemaRU = mongoose.Schema({
     title:{
         type:String,
         required:true,
@@ -33,29 +32,28 @@ const LectureSchemaRU = mongoose.Schema({
     creatorId:{
         type:mongoose.Schema.Types.ObjectId, ref:"Admin",
     }
-    
 })
 
-const LectureSchemaEN = mongoose.Schema({
+const PracticeSchemaEN = mongoose.Schema({
     title:{
+        type:String,
+        required:true,
+    },
+    context:{
         type:String,
         required:true,
     },
     subjectId:{
         type:mongoose.Schema.Types.ObjectId, ref:"SubjectEN",
     },
-    context:{
-        type:String,
-        required:true,
-    },
     creatorId:{
         type:mongoose.Schema.Types.ObjectId, ref:"Admin",
     }
-    
 })
 
-const LectureUZ = mongoose.model("LectureUZ", LectureSchemaUZ);
-const LectureRU = mongoose.model("LectureRU", LectureSchemaRU);
-const LectureEN = mongoose.model("LectureEN", LectureSchemaEN);
+const PracticeUZ = mongoose.model("PracticeUZ", PracticeSchemaUZ)
+const PracticeRU = mongoose.model("PracticeRU", PracticeSchemaRU)
+const PracticeEN = mongoose.model("PracticeEN", PracticeSchemaEN)
 
-module.exports ={LectureEN, LectureRU, LectureUZ}
+
+module.exports = {PracticeEN, PracticeRU, PracticeRU}

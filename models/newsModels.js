@@ -31,6 +31,7 @@ const NewSchemaUZ = mongoose.Schema({
         reqiured: true,
     }
 })
+
 const NewSchemaRU = mongoose.Schema({
     title: {
         type: String,
