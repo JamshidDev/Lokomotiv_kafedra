@@ -28,9 +28,8 @@ router.post("/add", upload.single('picture'), async (req, res) => {
         let picture = req.file?.filename
         let creatorId = req.user_id;
         let lang_code = req.lang_code;
-        let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body
+        let { firstName, lastName, midName, position, phone, email, visit_time,  } = req.body
         let teacher = null;
-        console.log(subjects);
 
         if (lang_code == langList[0].code) {
             teacher = await TeacherUZ.create({
@@ -42,7 +41,6 @@ router.post("/add", upload.single('picture'), async (req, res) => {
                 picture,
                 email,
                 visit_time,
-                subjects,
                 creatorId,
             })
         } else if (lang_code == langList[1].code) {
@@ -55,7 +53,6 @@ router.post("/add", upload.single('picture'), async (req, res) => {
                 picture,
                 email,
                 visit_time,
-                subjects,
                 creatorId,
             })
         } else if (lang_code == langList[2].code) {
@@ -68,7 +65,6 @@ router.post("/add", upload.single('picture'), async (req, res) => {
                 picture,
                 email,
                 visit_time,
-                subjects,
                 creatorId,
             })
         }
@@ -94,21 +90,22 @@ router.post("/add", upload.single('picture'), async (req, res) => {
 router.put("/update", upload.single('picture'), async (req, res) => {
     try {
         let picture = req.file?.filename
-        let teacher_id = req.query.teacher_id
+        let teacher_id = req.user_id
         let lang_code = req.lang_code;
-        let { firstName, lastName, midName, position, phone, email, visit_time, subjects } = req.body;
+        let { firstName, lastName, midName, position, phone, email, visit_time } = req.body;
 
         let teacher = null;
         if (lang_code == langList[0].code) {
-            let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
-            const path = `./public/teacher/${oldTeacher.picture}`;
-            fs.existsSync(path, function (exists) {
-                if (exists) {
-                    fs.unlinkSync(path);
-                }
-            });
+            // let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
+            // const path = `./public/teacher/${oldTeacher.picture}`;
+            // fs.existsSync(path, function (exists) {
+            //     console.log(exists);
+            //     if (exists) {
+            //         fs.unlinkSync(path);
+            //     }
+            // });
 
-            teacher = await TeacherUZ.findByIdAndUpdate(teacher_id, {
+            teacher = await TeacherUZ.findOneAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,
@@ -116,20 +113,20 @@ router.put("/update", upload.single('picture'), async (req, res) => {
                 phone: phone || undefined,
                 email: email || undefined,
                 visit_time: visit_time || undefined,
-                subjects: subjects || undefined,
                 picture: picture || undefined,
             });
+
         } else if (lang_code == langList[1].code) {
 
-            let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
-            const path = `./public/teacher/${oldTeacher.picture}`;
-            fs.existsSync(path, function (exists) {
-                if (exists) {
-                    fs.unlinkSync(path);
-                }
-            });
+            // let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
+            // const path = `./public/teacher/${oldTeacher.picture}`;
+            // fs.existsSync(path, function (exists) {
+            //     if (exists) {
+            //         fs.unlinkSync(path);
+            //     }
+            // });
 
-            teacher = await TeacherRU.findByIdAndUpdate(teacher_id, {
+            teacher = await TeacherRU.findOneAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,
@@ -137,20 +134,19 @@ router.put("/update", upload.single('picture'), async (req, res) => {
                 phone: phone || undefined,
                 email: email || undefined,
                 visit_time: visit_time || undefined,
-                subjects: subjects || undefined,
                 picture: picture || undefined,
             });
         } else if (lang_code == langList[2].code) {
 
-            let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
-            const path = `./public/teacher/${oldTeacher.picture}`;
-            fs.existsSync(path, function (exists) {
-                if (exists) {
-                    fs.unlinkSync(path);
-                }
-            });
+            // let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
+            // const path = `./public/teacher/${oldTeacher.picture}`;
+            // fs.existsSync(path, function (exists) {
+            //     if (exists) {
+            //         fs.unlinkSync(path);
+            //     }
+            // });
 
-            teacher = await TeacherEN.findByIdAndUpdate(teacher_id, {
+            teacher = await TeacherEN.findOneAndUpdate(teacher_id, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,
@@ -158,7 +154,6 @@ router.put("/update", upload.single('picture'), async (req, res) => {
                 phone: phone || undefined,
                 email: email || undefined,
                 visit_time: visit_time || undefined,
-                subjects: subjects || undefined,
                 picture: picture || undefined,
             });
         }
@@ -192,13 +187,13 @@ router.get("/all", async (req, res) => {
 
         if (lang_code == langList[0].code) {
             totalPage = await TeacherUZ.countDocuments({ firstName: { $regex: search, $options: 'i'  } })
-            teacher = await TeacherUZ.find({ firstName: { $regex: search, $options: 'i'  } }).populate("subjects", "name").populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+            teacher = await TeacherUZ.find({ firstName: { $regex: search, $options: 'i'  } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
         } else if (lang_code == langList[1].code) {
             totalPage = await TeacherRU.countDocuments({ firstName: { $regex: search, $options: 'i'  } })
-            teacher = await TeacherRU.find({ firstName: { $regex: search, $options: 'i'  } }).populate("subjects", "name").populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+            teacher = await TeacherRU.find({ firstName: { $regex: search, $options: 'i'  } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
         } else if (lang_code == langList[2].code) {
             totalPage = await TeacherEN.countDocuments({ firstName: { $regex: search, $options: 'i'  } })
-            teacher = await TeacherEN.find({ firstName: { $regex: search, $options: 'i'  } }).populate("subjects", "name").populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
+            teacher = await TeacherEN.find({ firstName: { $regex: search, $options: 'i'  } }).populate("creatorId", "firstName ").skip((page - 1) * per_page).limit(per_page);
         }
 
         res.status(200).json({
@@ -222,15 +217,15 @@ router.get("/all", async (req, res) => {
 router.get("/one", async (req, res) => {
     try {
         let lang_code = req.lang_code;
-        let teacher_id = req.query.teacher_id;
+        let teacher_id = req.user_id;
         let existTeacher = [];
 
         if (lang_code == langList[0].code) {
-            existTeacher = await TeacherUZ.find({ _id: teacher_id }).populate("subjects",).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherUZ.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
         } else if (lang_code == langList[1].code) {
-            existTeacher = await TeacherRU.find({ _id: teacher_id }).populate("subjects",).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherRU.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
         } else if (lang_code == langList[2].code) {
-            existTeacher = await TeacherEN.find({ _id: teacher_id }).populate("subjects",).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherEN.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
         }
         let isHaveTEacher = existTeacher.length > 0
         res.status(isHaveTEacher ? 200 : 400).json({
@@ -255,8 +250,8 @@ router.delete("/delete", async (req, res) => {
         let teacher = null;
         if (lang_code == langList[0].code) {
             let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
-            // const path = `./public/teacher/${oldTeacher.picture}`;
-            // fs.unlinkSync(path);
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.unlinkSync(path);
             teacher = await TeacherUZ.deleteOne({ _id: teacher_id })
         } else if (lang_code == langList[1].code) {
             let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })

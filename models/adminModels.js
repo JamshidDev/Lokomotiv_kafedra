@@ -1,11 +1,7 @@
 const mongoose = require('mongoose')
 
 const adminSchema = mongoose.Schema({
-    firstName:{
-        type:String,
-        required:true
-    },
-    lastName:{
+    fullName:{
         type:String,
         required:true
     },
@@ -20,6 +16,14 @@ const adminSchema = mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    permissions:{
+        type:[String],
+        default:['admin', 'delete', 'edit', 'create']
+    },
+    active:{
+        type:Boolean,
+        default:true,
     },
     created_date:{
         type:Date,

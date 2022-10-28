@@ -4,12 +4,11 @@ let {generateToken} = require("../utils/generateToken")
 // auth admin
 const authAdmin = async (req,res)=>{
     try{
-        const {firstName, lastName,login, password } = req.body;
+        const {fullName,login, password } = req.body;
         let existAdmin = await ADMIN.find({login: login});
         if(existAdmin.length == 0 ){
             let admin = await ADMIN.create({
-                firstName,
-                lastName,
+                fullName,
                 login,
                 password,
                 updated_date: new Date()
@@ -17,9 +16,7 @@ const authAdmin = async (req,res)=>{
             let token = generateToken(admin._id)
             res.status(200).json({
                 isSuccess:true,
-                data:admin,
-                access_token:token,
-                refresh_token:token,
+                data:'Admin muvofaqiyatli yaratildi',
                 errorMsg:null,
             })
         }else{
@@ -44,7 +41,7 @@ const authAdmin = async (req,res)=>{
 const loginAdmin = async (req,res)=>{
     try{
         let {login, password} = req.body
-        let existAdmin = await ADMIN.find({login, password});
+        let existAdmin = await ADMIN.find({login, password}).select('-login -password');
         if(existAdmin.length==1){
 
             let token = generateToken(existAdmin[0]._id)
@@ -72,6 +69,8 @@ const loginAdmin = async (req,res)=>{
         })
     }
 }
+
+
 
 
 module.exports = {authAdmin, loginAdmin}

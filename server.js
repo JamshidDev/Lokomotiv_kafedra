@@ -16,6 +16,7 @@ const authRouter = require("./router/authRouter")
 const teacherRouter = require("./router/teacherRouter")
 const subjectRouter = require("./router/subjectRouter")
 const lectureRouter = require("./router/lectureRouter")
+const uploadRouter = require("./router/uploadFileRouter")
 
 
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use("/admin/news", lang, adminNewsRoutes);
 app.use("/admin/teacher", lang, auth,teacherRouter);
 app.use("/admin/subject", lang, auth, subjectRouter);
 app.use("/admin/lecture", lang, auth, lectureRouter);
+app.use('/admin/upload', uploadRouter);
 
 
 // Public directions routes

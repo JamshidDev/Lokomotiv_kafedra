@@ -33,9 +33,6 @@ const teacherSchemaUZ = mongoose.Schema({
         type:String,
         required:true,
     },
-    subjects:[{
-        type:mongoose.Schema.Types.ObjectId, ref:"SubjectUZ",
-    }],
     additionalInfo:{
         type:String,
         default:"Additional Information"
@@ -85,9 +82,6 @@ const teacherSchemaRU = mongoose.Schema({
         type:String,
         required:true,
     },
-    subjects:[{
-        type:mongoose.Schema.Types.ObjectId, ref:"SubjectUZ",
-    }],
     additionalInfo:{
         type:String,
         default:"Additional Information"
@@ -137,9 +131,6 @@ const teacherSchemaEN = mongoose.Schema({
         type:String,
         required:true,
     },
-    subjects:[{
-        type:mongoose.Schema.Types.ObjectId, ref:"SubjectUZ",
-    }],
     additionalInfo:{
         type:String,
         default:"Additional Information"
