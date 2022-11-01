@@ -22,21 +22,27 @@ router.post("/add", async (req, res) => {
                 errorMessage: error,
             })
         } else {
-            const { name, course_id } = req.body
+            const { name, course_id } = value;
+
             if (lang_code == langList[0].code) {
+
                 subject = await SubjectUZ.create({
                     name,
                     course_id,
                     creatorId
                 })
-            } else if (lang_code == langList[1].code) {
+
+            } else if (lang_code == langList[1].code) { 
+
                 subject = await SubjectRU.create({
                     name,
                     course_id,
                     creatorId
                 })
+
             }
             else if (lang_code == langList[2].code) {
+                
                 subject = await SubjectEN.create({
                     name,
                     course_id,
