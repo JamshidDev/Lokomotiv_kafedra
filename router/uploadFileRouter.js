@@ -21,7 +21,7 @@ router.post('/news/picture',  upload.single('picture'), async (req, res) => {
   try{
     let fileName = req.file.filename;
     res.status(200).json({
-      isSuccess: false,
+      isSuccess: true,
       data: {
         fileName
       },
@@ -43,7 +43,7 @@ router.delete('/news/delete', async (req, res)=>{
     const path = `./public/news/${fileName}`;
     fs.unlinkSync(path);
     res.status(200).json({
-      isSuccess: false,
+      isSuccess: true,
       data: 'Muvofaqiyatli o\'chirildi',
       errorMessage: null,
     });
