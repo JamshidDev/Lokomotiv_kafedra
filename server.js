@@ -60,7 +60,7 @@ app.get("/", async (req, res) => {
 
 
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(process.env.MONGO_URL_DEV, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
