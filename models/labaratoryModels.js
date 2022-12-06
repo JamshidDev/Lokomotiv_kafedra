@@ -9,6 +9,7 @@ const LabaratorySchemaUZ = mongoose.Schema({
         type:String,
         required:true,
     },
+    additionalInfo:String,
     subjectId:{
         type:mongoose.Schema.Types.ObjectId, ref:"SubjectUZ",
     },
@@ -26,6 +27,7 @@ const LabaratorySchemaRU = mongoose.Schema({
         type:String,
         required:true,
     },
+    additionalInfo:String,
     subjectId:{
         type:mongoose.Schema.Types.ObjectId, ref:"SubjectRU",
     },
@@ -43,6 +45,7 @@ const LabaratorySchemaEN = mongoose.Schema({
         type:String,
         required:true,
     },
+    additionalInfo:String,
     subjectId:{
         type:mongoose.Schema.Types.ObjectId, ref:"SubjectEN",
     },

@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const langList = require("../utils/langList")
 const { LectureUZ, LectureEN, LectureRU } = require("../models/lectureModels")
+
 router.post("/add", async (req, res) => {
     try {
         let lang_code = req.lang_code;
