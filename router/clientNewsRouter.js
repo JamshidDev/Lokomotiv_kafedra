@@ -104,6 +104,10 @@ router.get('/one', async (req, res) =>{
     }
  })
 
+ router.get("/recnetly", async (req,res) =>{
+    res.send(req.url)
+ })
+
 
 
 
