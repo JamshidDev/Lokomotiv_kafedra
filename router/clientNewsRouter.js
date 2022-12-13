@@ -46,18 +46,23 @@ router.get('/all', async (req, res) => {
         let sort = req.query.sort || 1;
         let lang_code = req.lang_code;
         let news = null;
+        let totalPage = 0;
 
         if (lang_code == langList[0].code) {
+            totalPage = await NewUZ.countDocuments({})
             news = await NewUZ.find({}).sort({ created_date: sort }).skip((page - 1) * per_page).limit(per_page)
         } else if (lang_code == langList[1].code) {
+            totalPage = await NewRU.countDocuments({})
             news = await NewRU.find({}).sort({ created_date: sort }).skip((page - 1) * per_page).limit(per_page)
         } else if (lang_code == langList[2].code) {
+            totalPage = await NewEN.countDocuments({})
             news = await NewEN.find({}).sort({ created_date: sort }).skip((page - 1) * per_page).limit(per_page)
         }
 
         res.status(200).json({
             isSuccess: true,
             data: news,
+            totalItems:totalPage,
             errorMessage: null,
         })
 
@@ -124,11 +129,11 @@ router.get("/recnetly", async (req, res) => {
 
 
     if (lang_code == langList[0].code) {
-        news = await NewUZ.find({}).sort(sort).limit(per_page);
+        news = await NewUZ.find({}).sort({created_date:sort}).limit(per_page);
     } else if (lang_code == langList[1].code) {
-        news = await NewUZ.find({}).sort(sort).limit(per_page);
+        news = await NewUZ.find({}).sort({created_date:sort}).limit(per_page);
     } else if (lang_code == langList[2].code) {
-        news = await NewUZ.find({}).sort(sort).limit(per_page);
+        news = await NewUZ.find({}).sort({created_date:sort}).limit(per_page);
     }
 
     res.status(200).json({
@@ -149,6 +154,44 @@ router.get("/recnetly", async (req, res) => {
     });
 
    }
+})
+
+router.get('/viewed', async(req, res) =>{
+    try{
+        let lang_code = req.lang_code;
+        let sort = req.query.sort || 1;
+        let per_page = req.query.per_page || 10; 
+        let news = null;
+    
+    
+    
+        if (lang_code == langList[0].code) {
+            news = await NewUZ.find({}).sort({views:sort}).limit(per_page);
+        } else if (lang_code == langList[1].code) {
+            news = await NewUZ.find({}).sort({views:sort}).limit(per_page);
+        } else if (lang_code == langList[2].code) {
+            news = await NewUZ.find({}).sort({views:sort}).limit(per_page);
+        }
+    
+        res.status(200).json({
+            isSuccess: true,
+            data: news,
+            errorMessage: null,
+        })
+    
+    
+    
+       }catch(error){
+    
+        console.log(error);
+        res.status(500).json({
+            isSuccess: false,
+            data: null,
+            errorMessage: error,
+        });
+    
+       }
+
 })
 
 

@@ -46,6 +46,10 @@ const teacherSchemaUZ = mongoose.Schema({
         default:"other Information"
         
     },
+    indexOfPosition:{
+        type:Number,
+        default:0,
+    }
 
 })
 
@@ -95,6 +99,10 @@ const teacherSchemaRU = mongoose.Schema({
         default:"other Information"
         
     },
+    indexOfPosition:{
+        type:Number,
+        default:0,
+    }
 
 })
 
@@ -144,6 +152,10 @@ const teacherSchemaEN = mongoose.Schema({
         default:"other Information"
         
     },
+    indexOfPosition:{
+        type:Number,
+        default:0,
+    }
 
 })
 

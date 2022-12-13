@@ -18,6 +18,8 @@ const subjectRouter = require("./router/subjectRouter")
 const lectureRouter = require("./router/lectureRouter")
 const uploadRouter = require("./router/uploadFileRouter")
 const clientNewsRouter = require("./router/clientNewsRouter")
+const clientTeacherRouter = require("./router/clientTeacherRouter")
+
 
 
 app.use(express.json());
@@ -27,11 +29,13 @@ app.use(cors());
 
 app.use("/auth", authRouter);
 app.use("/admin/news", lang, adminNewsRoutes);
-app.use("/admin/teacher", lang, auth,teacherRouter);
+app.use("/admin/teacher", lang, auth, teacherRouter);
 app.use("/admin/subject", lang, auth, subjectRouter);
 app.use("/admin/lecture", lang, auth, lectureRouter);
 app.use('/admin/upload', uploadRouter);
-app.use('/client/news',lang, clientNewsRouter);
+app.use('/client/news', lang, clientNewsRouter);
+app.use('/client/teacher', lang, clientTeacherRouter);
+
 
 
 
@@ -45,6 +49,14 @@ app.get("/", async (req, res) => {
     res.status(200).json({
         isSuccess: true,
         data: null,
+    })
+})
+
+app.use((req, res) => {
+    res.status(404).json({
+        isSuccess: false,
+        data: null,
+        errorMessage: 'Not found Page :)',
     })
 })
 
