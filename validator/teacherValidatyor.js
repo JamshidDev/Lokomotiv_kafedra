@@ -9,7 +9,7 @@ const teacherSchema  = Joi.object({
     position:Joi.string().min(3).required(),
     phone:Joi.string().min(3).required(),
     additionalInfo:Joi.string().min(10).required(),
-    email:Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+    email:Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru',] } }).required(),
 }).unknown(true)
 
 

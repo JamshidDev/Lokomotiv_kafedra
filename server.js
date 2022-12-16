@@ -17,8 +17,10 @@ const teacherRouter = require("./router/teacherRouter")
 const subjectRouter = require("./router/subjectRouter")
 const lectureRouter = require("./router/lectureRouter")
 const uploadRouter = require("./router/uploadFileRouter")
+const BannerRouter = require("./router/BannerRouter");
 const clientNewsRouter = require("./router/clientNewsRouter")
 const clientTeacherRouter = require("./router/clientTeacherRouter")
+const clientLectureRouter =  require("./router/clientLectureRouter");
 
 
 
@@ -35,6 +37,10 @@ app.use("/admin/lecture", lang, auth, lectureRouter);
 app.use('/admin/upload', uploadRouter);
 app.use('/client/news', lang, clientNewsRouter);
 app.use('/client/teacher', lang, clientTeacherRouter);
+app.use('/client/lecture', lang, clientLectureRouter);
+app.use('/client/banner',lang, BannerRouter);
+
+
 
 
 

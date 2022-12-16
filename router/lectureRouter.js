@@ -124,6 +124,41 @@ router.get("/one", async(req,res) =>{
     }
 })
 
+router.get("/all", async(req,res) =>{
+    try{
+        let lang_code = req.lang_code;
+        let lecture = null;
+        let per_page = req.query.per_page || 10;
+        let page = req.query.page || 1;
+
+
+        if(lang_code == langList[0].code) {
+           lecture = await LectureUZ.find({}).populate("subjectId").skip((page-1)*per_page).limit(per_page);
+            
+        }else if(lang_code == langList[1].code){
+            lecture = await LectureRU.find({}).populate("subjectId").skip((page-1)*per_page).limit(per_page);
+        }
+        else if(lang_code == langList[2].code){
+            lecture = await LectureEN.find({}).populate("subjectId").skip((page-1)*per_page).limit(per_page);
+        }
+
+        res.status(200).json({
+            isSuccess: true,
+            data: lecture,
+            errorMessage: null,
+        })
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            isSuccess: false,
+            data: null,
+            errorMessage: error,
+        })
+    }
+})
+
+
 router.delete("/delete", async(req,res) =>{
     try{
         let lang_code = req.lang_code;

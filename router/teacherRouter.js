@@ -30,7 +30,7 @@ router.post("/add", upload.single('picture'), async (req, res) => {
         let creatorId = req.user_id;
         let lang_code = req.lang_code;
         let teacher = null;
-
+        console.log(req.body);
         const { error, value } = validateTeacher(req.body)
         if (error) {
 
@@ -45,107 +45,69 @@ router.post("/add", upload.single('picture'), async (req, res) => {
             if (lang_code == langList[0].code) {
 
                 // Personal info of techer in Uzbek
-
-                let existteacher = await TeacherUZ.find({ creatorId });
-                if (existteacher.length == 0) {
-                    teacher = await TeacherUZ.create({
-                        firstName,
-                        lastName,
-                        midName,
-                        position,
-                        phone,
-                        picture,
-                        email,
-                        visit_time,
-                        creatorId,
-                        additionalInfo
-                    })
-                    res.status(200).json({
-                        isSuccess: true,
-                        data: teacher,
-                        errorMessage: null,
-                    })
-                } else {
-                    res.status(403).json({
-                        isSuccess: false,
-                        data: null,
-                        errorMessage: {
-                            msg: `O'qtuvchining shaxsiy ma'lumotlari allaqchon mavjud`,
-                            teacher: existteacher,
-                        },
-                    })
-                }
-
-
+                teacher = await TeacherUZ.create({
+                    firstName,
+                    lastName,
+                    midName,
+                    position,
+                    phone,
+                    picture,
+                    email,
+                    visit_time,
+                    creatorId,
+                    additionalInfo
+                })
+                res.status(200).json({
+                    isSuccess: true,
+                    data: teacher,
+                    errorMessage: null,
+                })
 
             } else if (lang_code == langList[1].code) {
 
                 // Personal info of techer in Russian
+                teacher = await TeacherRU.create({
+                    firstName,
+                    lastName,
+                    midName,
+                    position,
+                    phone,
+                    picture,
+                    email,
+                    visit_time,
+                    creatorId,
+                    additionalInfo
+                })
+                res.status(200).json({
+                    isSuccess: true,
+                    data: teacher,
+                    errorMessage: null,
+                })
 
-                let existteacher = await TeacherRU.find({ creatorId });
-                if (existteacher.length == 0) {
-                    teacher = await TeacherRU.create({
-                        firstName,
-                        lastName,
-                        midName,
-                        position,
-                        phone,
-                        picture,
-                        email,
-                        visit_time,
-                        creatorId,
-                        additionalInfo
-                    })
-                    res.status(200).json({
-                        isSuccess: true,
-                        data: teacher,
-                        errorMessage: null,
-                    })
-                } else {
-                    res.status(403).json({
-                        isSuccess: false,
-                        data: null,
-                        errorMessage: {
-                            msg: `Личная информация преподавателя уже доступна`,
-                            teacher: existteacher,
-                        },
-                    })
-                }
+
 
 
             } else if (lang_code == langList[2].code) {
 
                 // Personal info of techer in English
 
-                let existteacher = await TeacherEN.find({ creatorId });
-                if (existteacher.length == 0) {
-                    teacher = await TeacherEN.create({
-                        firstName,
-                        lastName,
-                        midName,
-                        position,
-                        phone,
-                        picture,
-                        email,
-                        visit_time,
-                        creatorId,
-                        additionalInfo
-                    })
-                    res.status(200).json({
-                        isSuccess: true,
-                        data: teacher,
-                        errorMessage: null,
-                    })
-                } else {
-                    res.status(403).json({
-                        isSuccess: false,
-                        data: null,
-                        errorMessage: {
-                            msg: `The teacher's personal information is already available`,
-                            teacher: existteacher,
-                        },
-                    })
-                }
+                teacher = await TeacherEN.create({
+                    firstName,
+                    lastName,
+                    midName,
+                    position,
+                    phone,
+                    picture,
+                    email,
+                    visit_time,
+                    creatorId,
+                    additionalInfo
+                })
+                res.status(200).json({
+                    isSuccess: true,
+                    data: teacher,
+                    errorMessage: null,
+                })
 
 
             }
@@ -359,29 +321,29 @@ router.get("/one", async (req, res) => {
 router.delete("/delete", async (req, res) => {
     try {
 
-        // let teacher_id = req.query.teacher_id;
-        // let lang_code = req.lang_code;
-        // let teacher = null;
-        // if (lang_code == langList[0].code) {
-        //     let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
-        //     const path = `./public/teacher/${oldTeacher.picture}`;
-        //     fs.unlinkSync(path);
-        //     teacher = await TeacherUZ.deleteOne({ _id: teacher_id })
-        // } else if (lang_code == langList[1].code) {
-        //     let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
-        //     const path = `./public/teacher/${oldTeacher.picture}`;
-        //     fs.unlinkSync(path);
-        //     teacher = await TeacherRU.deleteOne({ _id: teacher_id })
-        // } else if (lang_code == langList[1].code) {
-        //     let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
-        //     const path = `./public/teacher/${oldTeacher.picture}`;
-        //     fs.unlinkSync(path);
-        //     teacher = await TeacherEN.deleteOne({ _id: teacher_id })
-        // }
-        res.status(400).json({
+        let teacher_id = req.query.teacher_id;
+        let lang_code = req.lang_code;
+        let teacher = null;
+        if (lang_code == langList[0].code) {
+            let oldTeacher = await TeacherUZ.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.unlinkSync(path);
+            teacher = await TeacherUZ.deleteOne({ _id: teacher_id })
+        } else if (lang_code == langList[1].code) {
+            let oldTeacher = await TeacherRU.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.unlinkSync(path);
+            teacher = await TeacherRU.deleteOne({ _id: teacher_id })
+        } else if (lang_code == langList[1].code) {
+            let oldTeacher = await TeacherEN.findOne({ _id: teacher_id })
+            const path = `./public/teacher/${oldTeacher.picture}`;
+            fs.unlinkSync(path);
+            teacher = await TeacherEN.deleteOne({ _id: teacher_id })
+        }
+        res.status(200).json({
             isSuccess: false,
-            data: null,
-            errorMessage: `Vaqtincha ruhsat etilmagan`,
+            data: teacher,
+            errorMessage: null,
         })
 
     } catch (error) {
