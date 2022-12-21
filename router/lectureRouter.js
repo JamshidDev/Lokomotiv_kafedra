@@ -99,13 +99,13 @@ router.get("/one", async(req,res) =>{
         let lecture = null;
 
         if(lang_code == langList[0].code) {
-           lecture = await LectureUZ.find({subjectId:subject_id})
+           lecture = await LectureUZ.find({subjectId:subject_id}).populate('subjectId');
             
         }else if(lang_code == langList[1].code){
-            lecture = await LectureRU.find({subjectId:subject_id})
+            lecture = await LectureRU.find({subjectId:subject_id}).populate('subjectId');
         }
         else if(lang_code == langList[2].code){
-            lecture = await LectureEN.find({subjectId:subject_id})
+            lecture = await LectureEN.find({subjectId:subject_id}).populate('subjectId');
         }
 
         res.status(200).json({

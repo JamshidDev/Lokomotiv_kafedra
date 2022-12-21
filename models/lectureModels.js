@@ -32,7 +32,7 @@ const LectureSchemaRU = mongoose.Schema({
     },
     creatorId:{
         type:mongoose.Schema.Types.ObjectId, ref:"Admin",
-    }
+    },
     
 })
 
