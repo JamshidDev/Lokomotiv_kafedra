@@ -45,6 +45,7 @@ router.get('/one', async (req, res) => {
     try{
         let lang_code = req.lang_code;
         let lecture_id = req.query.lecture_id;
+        console.log(lecture_id);
         let lecture = null;
         if(lang_code == langList[0].code) {
             lecture = await LectureUZ.find({_id:lecture_id})

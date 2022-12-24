@@ -269,12 +269,12 @@ router.get("/all", async (req, res) => {
 router.get("/one", async (req, res) => {
     try {
         let lang_code = req.lang_code;
-        let teacher_id = req.user_id;
+        let teacher_id = req.query.teacher_id;
         let existTeacher = [];
 
         if (lang_code == langList[0].code) {
 
-            existTeacher = await TeacherUZ.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherUZ.find({ _id: teacher_id }).populate("creatorId", "-login -password ")
 
             let isHaveTEacher = existTeacher.length > 0
             res.status(isHaveTEacher ? 200 : 400).json({
@@ -285,7 +285,7 @@ router.get("/one", async (req, res) => {
 
         } else if (lang_code == langList[1].code) {
 
-            existTeacher = await TeacherRU.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherRU.find({  _id: teacher_id  }).populate("creatorId", "-login -password ")
 
             let isHaveTEacher = existTeacher.length > 0
             res.status(isHaveTEacher ? 200 : 400).json({
@@ -296,7 +296,7 @@ router.get("/one", async (req, res) => {
 
         } else if (lang_code == langList[2].code) {
 
-            existTeacher = await TeacherEN.find({ creatorId: teacher_id }).populate("creatorId", "-login -password ")
+            existTeacher = await TeacherEN.find({  _id: teacher_id  }).populate("creatorId", "-login -password ")
 
             let isHaveTEacher = existTeacher.length > 0
             res.status(isHaveTEacher ? 200 : 400).json({

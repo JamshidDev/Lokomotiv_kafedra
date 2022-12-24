@@ -21,6 +21,7 @@ const BannerRouter = require("./router/BannerRouter");
 const clientNewsRouter = require("./router/clientNewsRouter")
 const clientTeacherRouter = require("./router/clientTeacherRouter")
 const clientLectureRouter =  require("./router/clientLectureRouter");
+const clientSubject = require("./router/clientSubject");
 
 
 
@@ -39,6 +40,8 @@ app.use('/client/news', lang, clientNewsRouter);
 app.use('/client/teacher', lang, clientTeacherRouter);
 app.use('/client/lecture', lang, clientLectureRouter);
 app.use('/client/banner',lang, BannerRouter);
+app.use('/client/subject',lang, clientSubject);
+
 
 
 
