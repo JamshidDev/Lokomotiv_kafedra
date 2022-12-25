@@ -96,7 +96,7 @@ mongoose.connect(process.env.MONGO_URL_DEV, {
 
 
 
-const PORT = process.env.PORT || 500;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 })
