@@ -137,7 +137,7 @@ router.post("/add", upload.single('picture'), async (req, res) => {
 router.put("/update", upload.single('picture'), async (req, res) => {
     try {
         let picture = req.file?.filename
-        let teacher_id = req.user_id
+        let teacher_id = req.query.teacher_id
         let lang_code = req.lang_code;
         let { firstName, lastName, midName, position, phone, email, visit_time, additionalInfo } = req.body;
         let teacher = null;
@@ -151,7 +151,7 @@ router.put("/update", upload.single('picture'), async (req, res) => {
             //     }
             // });
 
-            teacher = await TeacherUZ.findOneAndUpdate({ creatorId: teacher_id }, {
+            teacher = await TeacherUZ.findOneAndUpdate({ _id: teacher_id }, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,
@@ -176,7 +176,7 @@ router.put("/update", upload.single('picture'), async (req, res) => {
             //     }
             // });
 
-            teacher = await TeacherRU.findOneAndUpdate({ creatorId: teacher_id }, {
+            teacher = await TeacherRU.findOneAndUpdate({_id: teacher_id }, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,
@@ -197,7 +197,7 @@ router.put("/update", upload.single('picture'), async (req, res) => {
             //     }
             // });
 
-            teacher = await TeacherEN.findOneAndUpdate({ creatorId: teacher_id }, {
+            teacher = await TeacherEN.findOneAndUpdate({_id: teacher_id }, {
                 firstName: firstName || undefined,
                 lastName: lastName || undefined,
                 midName: midName || undefined,

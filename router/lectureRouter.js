@@ -95,17 +95,17 @@ router.put("/update", async(req,res) =>{
 router.get("/one", async(req,res) =>{
     try{
         let lang_code = req.lang_code;
-        let subject_id = req.query.subject_id;
+        let lecture_id = req.query.lecture_id;
         let lecture = null;
 
         if(lang_code == langList[0].code) {
-           lecture = await LectureUZ.find({subjectId:subject_id}).populate('subjectId');
+           lecture = await LectureUZ.find({_id:lecture_id}).populate('subjectId');
             
         }else if(lang_code == langList[1].code){
-            lecture = await LectureRU.find({subjectId:subject_id}).populate('subjectId');
+            lecture = await LectureRU.find({_id:lecture_id}).populate('subjectId');
         }
         else if(lang_code == langList[2].code){
-            lecture = await LectureEN.find({subjectId:subject_id}).populate('subjectId');
+            lecture = await LectureEN.find({_id:lecture_id}).populate('subjectId');
         }
 
         res.status(200).json({
