@@ -20,10 +20,12 @@ module.exports = async function lang(req, res, next) {
             })
         }
     } else {
-        res.status(400).json({
-            isSuccess: false,
-            data: null,
-            errorMessage: "lang_code is null or invalid "
-        })
+        // res.status(400).json({
+        //     isSuccess: false,
+        //     data: null,
+        //     errorMessage: "lang_code is null or invalid "
+        // })
+        req.lang_code = 1;
+        next()
     }
 }
