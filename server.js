@@ -57,7 +57,7 @@ app.use('/news/picture', express.static(__dirname + '/public/news'));
 app.get("/", async (req, res) => {
     res.status(200).json({
         isSuccess: true,
-        data: null,
+        data: 'Server is running...!',
     })
 })
 
