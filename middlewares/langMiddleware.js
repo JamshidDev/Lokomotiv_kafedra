@@ -1,7 +1,11 @@
 const JWT = require("jsonwebtoken")
 let langList = require("../utils/langList")
 module.exports = async function lang(req, res, next) {
-    let lang_code = req.headers.lang_code? req.headers.lang_code : null
+
+    let lang_code = req.headers.lang_code? req.headers.lang_code : null;
+    console.log(req.headers.lang_code);
+    console.log(req.headers);
+
     let existLang = langList.filter((item)=> item.code ==lang_code )
 
     if (lang_code && existLang.length > 0) {
